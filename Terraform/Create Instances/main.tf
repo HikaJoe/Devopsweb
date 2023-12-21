@@ -6,7 +6,7 @@ provider "google" {
 
 resource "google_compute_instance" "vm-login" {
     name         = "vm-login"
-    machine_type = "n1-standard-1"
+    machine_type = "c3d-standard-4"
     zone         = "us-central1-a"
 
     # Create a boot disk using an image
@@ -24,7 +24,7 @@ resource "google_compute_instance" "vm-login" {
 
 resource "google_compute_instance" "vm-videos" {
     name         = "vm-videos"
-    machine_type = "n1-standard-1"
+    machine_type = "c3d-standard-4"
     zone         = "us-central1-b"
 
     # Create a boot disk using an image
@@ -42,7 +42,7 @@ resource "google_compute_instance" "vm-videos" {
 
 resource "google_compute_instance" "vm-jenkins" {
     name         = "vm-jenkins"
-    machine_type = "n1-standard-1"
+    machine_type = "c3d-standard-4"
     zone         = "us-central1-c"
 
     # Create a boot disk using an image
@@ -56,5 +56,4 @@ resource "google_compute_instance" "vm-jenkins" {
     network_interface {
         network = "default"
     }
-
 }
