@@ -6,13 +6,14 @@ provider "google" {
 
 resource "google_compute_instance" "vm-login" {
     name         = "vm-login"
-    machine_type = "c3d-standard-4"
+    machine_type = "n1-standard-4"
     zone         = "us-central1-a"
 
     # Create a boot disk using an image
     boot_disk {
         initialize_params {
-            image = "ubuntu-os-cloud/ubuntu-2004-lts"
+           image = "cos-cloud/cos-101-17162-336-43"
+           size = 10
         }
     }
 
@@ -20,17 +21,20 @@ resource "google_compute_instance" "vm-login" {
     network_interface {
         network = "default"
     }
+
+
 }
 
 resource "google_compute_instance" "vm-videos" {
     name         = "vm-videos"
-    machine_type = "c3d-standard-4"
+    machine_type = "n1-standard-4"
     zone         = "us-central1-b"
 
     # Create a boot disk using an image
     boot_disk {
         initialize_params {
-            image = "ubuntu-os-cloud/ubuntu-2004-lts"
+            image = "cos-cloud/cos-101-17162-336-43"
+            size = 10
         }
     }
 
@@ -42,18 +46,27 @@ resource "google_compute_instance" "vm-videos" {
 
 resource "google_compute_instance" "vm-jenkins" {
     name         = "vm-jenkins"
-    machine_type = "c3d-standard-4"
+    machine_type = "n1-standard-4"
     zone         = "us-central1-c"
 
     # Create a boot disk using an image
     boot_disk {
         initialize_params {
-            image = "ubuntu-os-cloud/ubuntu-2004-lts"
+            image = "projects/cos-cloud/global/images/cos-101-17162-336-43"
+            size = 10
+            type  = "pd-balanced"
         }
+    mode = "READ_WRITE"
     }
 
     # Create a network interface with a NAT IP
     network_interface {
-        network = "default"
+    access_config {
+      network_tier = "PREMIUM"
     }
+ subnetwork = "projects/my-flix-408803/regions/us-central1/subnetworks/default"
 }
+
+}
+
+
