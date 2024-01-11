@@ -12,18 +12,41 @@ resource "google_compute_instance" "vm-login" {
     # Create a boot disk using an image
     boot_disk {
         initialize_params {
-           image = "cos-cloud/cos-101-17162-336-43"
+           image = "projects/ubuntu-os-pro-cloud/global/images/ubuntu-pro-1604-xenial-v20231213"
            size = 10
+            type  = "pd-balanced"
         }
+        mode = "READ_WRITE"
     }
 
     # Create a network interface with a NAT IP
     network_interface {
-        network = "default"
+    access_config {
+        network_tier = "PREMIUM"
     }
 
+    subnetwork = "projects/my-flix-408803/regions/us-central1/subnetworks/default"
+    
+    }
 
+    
 }
+resource "google_compute_firewall" "allow-mysql" {
+  name    = "allow-mysql"
+  network = google_compute_instance.vm-login.network_interface[0].subnetwork
+
+  allow {
+    protocol = "tcp"
+    ports    = ["3306"]
+  }
+
+  source_ranges = ["0.0.0.0/0"]  # Adjust this to limit the source IP ranges if needed
+}
+
+
+
+
+
 
 resource "google_compute_instance" "vm-videos" {
     name         = "vm-videos"
@@ -33,15 +56,26 @@ resource "google_compute_instance" "vm-videos" {
     # Create a boot disk using an image
     boot_disk {
         initialize_params {
-            image = "cos-cloud/cos-101-17162-336-43"
+            image = "projects/ubuntu-os-pro-cloud/global/images/ubuntu-pro-1604-xenial-v20231213"
             size = 10
+            type  = "pd-balanced"
         }
+        mode = "READ_WRITE"
     }
 
     # Create a network interface with a NAT IP
     network_interface {
-        network = "default"
+    access_config {
+      network_tier = "PREMIUM"
     }
+
+    subnetwork = "projects/my-flix-408803/regions/us-central1/subnetworks/default"
+
+  }
+   scheduling {
+    automatic_restart   = true
+    provisioning_model  = "STANDARD"
+  }
 }
 
 resource "google_compute_instance" "vm-jenkins" {
